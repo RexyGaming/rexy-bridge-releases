@@ -1,8 +1,8 @@
 # Rexy Bridge 3.0 — User Guide
 
-A panel-by-panel tour of every control. Setup and UE connection are covered in **GETTING_STARTED.md**; this document assumes you're connected and driving a camera.
+A panel-by-panel tour of every control, in the order they appear in the app. Setup and UE connection are covered in **GETTING_STARTED.md**; this guide assumes you're connected and driving a camera.
 
-> 📸 **Screenshot:** the whole app window, so readers can see the overall layout before we go section by section.
+![The Rexy Bridge control panel](docs/screenshots/01-overview.png)
 
 ---
 
@@ -25,68 +25,87 @@ A panel-by-panel tour of every control. Setup and UE connection are covered in *
 
 ## 1. Top bar
 
-> 📸 **Screenshot:** the top bar — logo + version badge on the left, status dots and Units/Output toggles on the right.
+![Top bar](docs/screenshots/02-topbar.png)
 
 - **Version badge** (`v3.0.0-beta.1`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
 - **HARDWARE** dot — your gamepad/wheels. Wakes when you click the window and press a physical button.
 - **WS** dot — the internal app↔bridge link.
 - **UE RC** dot — the Unreal Remote Control connection.
 - **Units** — global metric (m/cm) vs imperial (ft/in) for distances and positions.
-- **Output mode** — **osc / ue** drives Unreal directly; **freed** broadcasts a FreeD tracking stream instead.
 
 ---
 
-## 2. Camera row
+## 2. Output mode & network
 
-> 📸 **Screenshot:** the camera row with a couple of discovered cameras and the Scan UE button.
+The **osc / ue** vs **freed** toggle chooses what Rexy Bridge drives, and the network fields beneath it change to match.
 
-- **⌕ Scan UE** — auto-discovers every CineCameraActor and CameraRig_Crane in your open level. No preset or `mappings.json` editing required.
-- **Camera buttons** — click to select the active camera. The selected camera's bindings and profile load. Each camera button can itself be **bound** to a key/button for fast switching.
-- A camera parented to a crane enables **Crane** mode automatically.
+- **osc / ue** (default) — drives Unreal directly via Remote Control. The fields show the UE/OSC target host and port.
 
----
+  ![OSC / UE network parameters](docs/screenshots/04a-config-row.png)
 
-## 3. Connection & Config row
+- **freed** — broadcasts a **FreeD** camera-tracking stream on the network so any FreeD-compatible app can consume it (no UE writes). The fields switch to the FreeD stream host/port.
 
-> 📸 **Screenshot:** the config row (connection fields + Save/Load).
+  ![FreeD network parameters](docs/screenshots/04b-config-row.png)
 
-- **Script Host / Port** and **UE Host / Port** — where the bridge and Unreal live. Defaults work for everything on one PC.
-- **Save / Load config** — writes or restores a `.json` holding your connection settings, bindings, tuning, lenses, lens boxes, favourites, jog binding, and modes. Use it to move a complete setup between machines.
+Your connection settings, along with every binding and tuning value, save and reload from the Config controls — export a `.json` to move a whole setup between machines.
 
 ---
 
-## 4. Functions panel
+## 3. Cameras — Scan & select
 
-Bindable one-shot actions. Each card has a **Trigger** (fire it now) and a **Bind** (assign a key/button). Binding any copy of an action keeps every copy in sync.
+Before scanning, the camera row is empty and waiting.
 
-> 📸 **Screenshot:** the Functions panel showing all cards.
+![Camera row before scanning](docs/screenshots/03a-camera-row.png)
 
-- **Autolevel Roll** — smoothly returns roll to 0° over **Time** seconds, with an **F** easing.
-- **MoCo · Rec / Play / Stop / Home / Mark** — transport actions, bindable so you never have to reach for the mouse mid-take. **Mark** drops a mark on **every bound track** at the playhead.
-- **Lens · Tighter / Wider** — step to the next longer/shorter lens in the active **lens box**.
+Click **⌕ Scan UE** to auto-discover every Cine Camera Actor and CameraRig_Crane in your open level — no RexyControl preset, no `mappings.json` editing. Review the result, then **Apply** for this session or **Apply + Save** to persist it.
+
+![Auto-scan results — Apply / Apply + Save](docs/screenshots/03b-camera-row.png)
+
+Discovered cameras appear as buttons. Click one to make it the **active** camera; its bindings and profile load.
+
+![Active camera menu](docs/screenshots/03c-camera-row.png)
+
+Each camera button can itself be **bound** to a key or gamepad button for hands-free switching mid-shot.
+
+![Binding a button to switch the active camera](docs/screenshots/03d-camera-row.png)
 
 ---
 
-## 5. Rexy Wheels — camera head
+## 4. Rexy Wheels — camera head
 
 The three head axes: **pan, tilt, roll**.
 
-> 📸 **Screenshot:** the Wheels panel (all three cards), plus a close-up of one card showing every control.
+- **Absolute** — wheel position = camera angle.
 
-- **Absolute / Relative** (panel header) — Absolute: wheel position = camera angle. Relative: wheel deflection = rotation *speed*, centre = hold (endless-rotation, fluid-head style).
-- **Value** and **live —** readouts — what you're commanding vs the camera's actual angle from UE.
-- **Slider** — drag directly, or watch it track your bound input.
-- **Bind / Hold / Inv / Reset** — as described in Core concepts.
-- **S / C / D / F** — per-axis tuning.
-- **Min / Max** — clamp the output range for that axis.
+  ![Wheels in Absolute mode](docs/screenshots/06a-wheels.png)
+
+- **Relative** — wheel deflection = rotation *speed*, centre = hold (endless-rotation, fluid-head style).
+
+  ![Wheels in Relative mode](docs/screenshots/06b-wheels.png)
+
+Each card has **Value** and **live —** readouts (commanded vs the camera's actual angle from UE), a **slider**, **Bind / Hold / Inv / Reset**, the **S / C / D / F** tuning row, and **Min / Max** to clamp the output range.
+
+![A single wheel card, close up](docs/screenshots/06c-wheels.png)
+
+---
+
+## 5. Functions
+
+Bindable one-shot actions. Each card has a **Trigger** (fire it now) and a **Bind** (assign a key/button). Binding any copy of an action keeps every copy in sync.
+
+![The Functions panel](docs/screenshots/05-functions.png)
+
+- **Autolevel Roll** — smoothly returns roll to 0° over **Time** seconds, with an **F** easing.
+- **MoCo · Rec / Play / Stop / Home / Mark** — transport actions, bindable so you never reach for the mouse mid-take. **Mark** drops a mark on **every bound track** at the playhead.
+- **Lens · Tighter / Wider** — step to the next longer/shorter lens in the active **lens box**.
 
 ---
 
 ## 6. Rexy Focus — lens & body
 
-> 📸 **Screenshot:** the whole Focus panel.
+![The Focus panel](docs/screenshots/07-focus-panel.png)
 
-### Lens & body (left)
+### Lens & body
 
 - **Camera body / filmback** — sensor/filmback preset.
 - **Lens** — pick a lens; UE's LensSettings (focal, aperture, min-focus) update live.
@@ -96,23 +115,23 @@ The three head axes: **pan, tilt, roll**.
 
 A **lens box** is a named kit — a list of lenses you cycle through on set.
 
-> 📸 **Screenshot:** the Lens box section with a box loaded and a few lenses in it.
+![The Lens box section](docs/screenshots/08-lens-box.png)
 
 - **Box selector** + **Create lens box** — make and switch between kits.
-- **Add lens to box** dropdown — add any existing lens, or **✎ + Custom lens…** to define a new one that's dropped straight into the box.
+- **Add lens to box** dropdown — add any existing lens, or **✎ + Custom lens…** to define a new one that drops straight into the box.
 - **Lens chips** — the box's lenses, always sorted by focal length; the active lens is highlighted. ✕ removes one.
 - **◀ Wider / Tighter ▶** — step through the box by focal length (clamped at the ends). Each has a **Bind** for hardware control.
 - **Save / Export / Import / Delete** — boxes export and import independently of the main config, so you can share a kit.
 
 ### Favourite lenses
 
-> 📸 **Screenshot:** the Favourites list with a couple of favourites and their Bind buttons.
+![The Favourites list](docs/screenshots/09-favourites.png)
 
 A global quick-jump list. Add any lens, then **Bind** a key/button to jump straight to it — independent of which box is loaded.
 
 ### Focus / Iris / Zoom
 
-> 📸 **Screenshot:** the Focus/Iris/Zoom rows showing the sliders and the S/C/D/F boxes.
+![Focus / Iris / Zoom with S/C/D/F](docs/screenshots/10-focus-iris-zoom.png)
 
 Each has a slider, **Bind**, **Inv**, a live readout, and the full **S / C / D / F** tuning row — so a focus puller can bind a wheel or keys and tune the feel exactly like the head axes. Zoom locks automatically on a prime lens.
 
@@ -120,22 +139,39 @@ Each has a slider, **Bind**, **Inv**, a live readout, and the full **S / C / D /
 
 ## 7. Grip — crane / dolly / drone
 
-> 📸 **Screenshot:** the Grip panel with the Crane/Dolly/Drone mode buttons.
+![The Grip panel](docs/screenshots/11a-grip.png)
 
-- **Crane / Dolly / Drone** modes:
-  - **Crane** — the grip swings a jib arm around its base (yaw, pitch, scope/arm-length).
-  - **Dolly** — straight ground translation (X/Y/Z), no arm pivot.
-  - **Drone** — free flight through 3D space.
-- **Grip cards** (craneYaw, scope, cranePitch) — same binding + S/C/D/F model as the wheels.
-- **Crane Base** (baseX/Y/Z) with **Absolute / Relative** — Absolute: slider = position between Min/Max. Relative: slider deviation = movement speed, centre = stop.
+- **Crane** — the grip swings a jib arm around its base (yaw, pitch, scope/arm-length).
+- **Dolly** — straight ground translation (X/Y/Z), no arm pivot.
+- **Drone** — free flight through 3D space.
+
+The grip cards (craneYaw, scope, cranePitch) use the same binding + S/C/D/F model as the wheels.
+
+### Crane Base
+
+The base (baseX/Y/Z) drives the rig's pivot, with two modes:
+
+- **Absolute** — slider position = base position between Min and Max.
+
+  ![Crane base — Absolute](docs/screenshots/12a-position.png)
+
+- **Relative** — slider deviation = movement speed (m/s); centre = stop.
+
+  ![Crane base — Relative](docs/screenshots/12b-position.png)
 
 ---
 
 ## 8. Position panels
 
-> 📸 **Screenshot:** the camera and crane position panels.
+Live **X / Y / Z** readouts, with **Set** (send a manual position; blank axes keep their current value) and **Zero** (reset to 0,0,0).
 
-Live **X / Y / Z** readouts for the camera and crane, with **Set** (send a manual position; blank axes keep their current value) and **Zero** (reset to 0,0,0).
+- **Crane target** — where the camera/target sits.
+
+  ![Crane target position](docs/screenshots/12c-position.png)
+
+- **Crane base** — where the rig base sits.
+
+  ![Crane base position](docs/screenshots/12d-position.png)
 
 ---
 
@@ -143,13 +179,13 @@ Live **X / Y / Z** readouts for the camera and crane, with **Set** (send a manua
 
 Record, edit, and play back moves across every bound parameter.
 
-> 📸 **Screenshot:** the full Virtual MoCo panel — transport, timeline, and track list.
+![The Virtual MoCo panel](docs/screenshots/13-moco-full.png)
 
 ### Transport
 
-> 📸 **Screenshot:** the transport row (REC / STOP / PLAY / Bake / Rewind / Home / Mark / Jog).
+![The MoCo transport row](docs/screenshots/14-moco-transport.png)
 
-- **● REC / ■ STOP / ▶ PLAY** — each with a **Bind** button for hardware control. STOP leaves the playhead where it is; **Home** (or Rewind) returns it to the start.
+- **● REC / ■ STOP / ▶ PLAY** — each with a **Bind** button. STOP leaves the playhead where it is; **Home** (or Rewind) returns it to the start.
 - **Bake** — a 3-2-1 countdown on REC/PLAY so you can sync with UE's Take Recorder.
 - **⌂ HOME** — snaps play-armed tracks to their start values and the playhead to 0.
 - **◆ MARK** — drops a mark on every bound track at the playhead.
@@ -157,21 +193,15 @@ Record, edit, and play back moves across every bound parameter.
 
 ### Takes
 
-> 📸 **Screenshot:** the take controls (New / Duplicate / Delete / take selector / Save / Load / Expand / Reset).
+![The take controls](docs/screenshots/15-moco-takes.png)
 
 Multi-take management. Save/Load moves as `.rxmove` files. **Expand** stacks each track in its own lane; **Reset** clears everything.
 
-### Timeline
+### Timeline & tracks
 
-> 📸 **Screenshot:** the timeline canvas with a recorded move, playhead, and some marks.
+![The timeline with a recorded move, playhead, and marks](docs/screenshots/15-moco-timeline.png)
 
-Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll wheel, and drag anchor dots to reshape curves.
-
-### Track list & arming
-
-> 📸 **Screenshot:** the track list showing the P / R / E / M arm buttons on a track.
-
-Each track has four arm toggles:
+Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll wheel, and drag anchor dots to reshape curves. Each track (left of the timeline) has four arm toggles:
 
 - **P — Play** — plays back its recorded/marked data.
 - **R — Record** — captures live input on the next REC (recording over a track auto-erases its marks).
@@ -182,37 +212,26 @@ Each track has four arm toggles:
 
 ## 10. Gamepad Debug & calibration
 
-> 📸 **Screenshot:** the Gamepad Debug panel open, showing live axis bars.
+![The Gamepad Debug panel](docs/screenshots/18a-gamepad-debug.png)
 
 - **Show / Hide** — toggles the live view of every axis and button on connected controllers.
 - **Null Drift (5s)** — samples all axes for 5 seconds and stores the average as zero, nulling resting drift. **Clear Cal** removes it.
-- **Per-axis "C" button** — opens the calibration wizard:
 
-> 📸 **Screenshot:** the calibration wizard modal (ideally on the "Tune response" step showing the curve + waveform).
+![Live axis bars in the debug panel](docs/screenshots/18b-gamepad-debug.png)
 
-  - **Steps 1–3** capture the axis **max**, **min**, and **rest** so uneven hardware maps to a clean −1…+1.
-  - **Tune response** shapes the feel with a preset (Linear / Relaxed / Aggressive) or a custom curve, with a live waveform and curve preview. **Skip** jumps straight to the tuner; **Redo step** re-captures the current step.
+The per-axis **"C"** button opens the calibration wizard. Steps 1–3 capture the axis **max**, **min**, and **rest** so uneven hardware maps to a clean −1…+1.
+
+![Calibration wizard — capture steps](docs/screenshots/19a-cal-wizard.png)
+
+The final **Tune response** step shapes the feel with a preset (Linear / Relaxed / Aggressive) or a custom curve, with a live waveform and curve preview. **Skip** jumps straight to the tuner; **Redo step** re-captures the current step.
+
+![Calibration wizard — Tune response](docs/screenshots/19b-cal-wizard.png)
 
 ---
 
 ## 11. Other inputs — OSC, MIDI, FreeD
 
-> 📸 **Screenshot:** the alt-inputs area (OSC in, MIDI, FreeD in).
+![Alt inputs — OSC / FreeD / MIDI](docs/screenshots/20a-alt-inputs.png)
 
 - **OSC in** — accept OSC from external devices (e.g. the Rexy Wheels). Set **port**, an optional **prefix** filter, and the input **min/max** range. **Sample 10s** records every OSC message for ten seconds and exports a JSON log — the ground-truth capture for diagnosing a device.
-- **MIDI** — **Enable MIDI** reads MIDI controls (knobs, faders, notes, pitch-bend) into the same input path as gamepads, so they bind the same way.
-- **FreeD in** — accept an incoming FreeD tracking stream.
-
-All three feed the same binding system: enable the source, then **Bind** any control to it.
-
----
-
-## 12. OSC output log
-
-> 📸 **Screenshot:** the log panel.
-
-A live feed of what the bridge is sending and status messages — handy for confirming a control is reaching UE and for spotting warnings.
-
----
-
-*Questions or bug reports: rob@realprogear.com*
+- **MIDI** — **Enable MIDI** reads MIDI controls (knobs, faders, notes, pitch-bend) into the same input path as gamepads, s
