@@ -1,22 +1,34 @@
-# Rexy Bridge 3.0.0-beta.1
+# Rexy Bridge 3.1.0-beta
 
-First public beta of Rexy Bridge v3. Windows installer, driving Unreal Engine 5 cine cameras and crane rigs live.
+The 3.1 beta — a big step up from the first public beta. Adds in-app updating, a full signal-filter workbench, a light theme, and a print edition of the manual, plus a batch of fixes.
 
-**[Install & UE setup guide](GETTING_STARTED.md) · [Full user guide](USER_GUIDE.md)**
+**[Install & UE setup guide](GETTING_STARTED.md) · [User guide](USER_GUIDE.md) · [Print / greyscale guide](USER_GUIDE-light.pdf)**
 
-## Highlights
+## New
 
-- **One-click Windows installer** — the app, the UE bridge, and the gamepad reader are all bundled. No Node or Python to install.
-- **Auto camera discovery** — hit **⌕ Scan UE** to find every Cine Camera Actor and crane in your level. No RexyControl preset, no `mappings.json` editing.
-- **Lens boxes & favourites** — build named lens kits, cycle them with bindable **Wider / Tighter** buttons, and jump to favourite lenses from bound keys. Boxes export/import on their own.
-- **Focus / Iris / Zoom tuning** — full sensitivity / curve / deadband / feather control, matching the head and grip axes. Custom-lens min-focus follows your ft/in ↔ m/cm preference.
-- **Virtual MoCo upgrades** — bindable transport (Rec / Stop / Play / Home / Mark), a bindable **jog shuttle** to scrub the playhead from hardware, **mark all tracks** at once, S-curve editing on marked-but-unrecorded tracks, and auto-erase of marks when you record over a track. Stop now holds the playhead in place.
-- **More input sources** — MIDI (knobs, faders, notes, pitch-bend) and configurable OSC input, both bindable exactly like gamepads. A 10-second OSC capture tool exports a JSON log for diagnosing devices.
-- **Per-axis calibration wizard** — capture an axis's true min/max/rest and shape its response curve, plus the quick 5-second null-drift for resting stick/wheel drift.
-- **Speed control on keys** — the **S** value now works for keyboard/button bindings too, so key-driven moves have adjustable speed, curve, and feather.
+- **Check for updates** — a button in the top bar checks the release server on demand, downloads a newer build in the background, and offers **Restart to update**. It never checks automatically on launch, so it can't interrupt a session. (From this version on, future updates are one click — no reinstalling.)
+- **Signal Filter Lab** (in the calibration wizard) — capture a live axis waveform, audition nine filters (median, moving-average, EMA, double-EMA, Kalman, 1-Euro, Hampel, deadband, slew) on a 3×3 preview grid, and **chain them live** so the cleaned signal drives UE in real time. Every filter has editable parameters and an ⓘ explainer. Save/load named **filter sets** to reuse across axes and machines.
+- **Live input + output waveforms** on the tuning page — raw device signal and the filtered-and-curved output (in calibrated cyan) side by side, in sync.
+- **Axis scan tools** — a raw-axis capture in Gamepad Debug and a tuning-page scan that logs raw + filtered + output to JSON with a noise-reduction figure, for diagnosing input devices.
+- **Light theme** — a Dark / Light toggle in the top bar (pale blue-grey background, dark text, accent colours preserved).
+- **Print / greyscale user guide** — `USER_GUIDE-light.pdf`, a light-background, mono-friendly edition of the manual for printing.
+
+## Fixes
+
+- FreeD / UE output toggle switches correctly.
+- Rebuilt the per-axis calibration wizard (min/max/rest capture + response curve); the min marker is now Rexy pink so it's easy to tell from the blue max marker.
+- Light theme: Filter Lab parameter boxes no longer render dark-on-dark.
+- MIDI input re-enabled; OSC-in port/prefix/range settings apply.
+- Stopping a MoCo recording no longer errors; STOP holds the playhead in place.
+- Various smaller fixes across input handling.
+
+## Updating
+
+Run the new `RexyBridge-Setup-3.1.0-beta.exe` over the top of your current install — no need to uninstall. Bindings, filter sets, lens boxes and theme are kept (they live in `%AppData%\Roaming\RexyBridge`). After this build, use the in-app **Check for updates** button instead.
 
 ## Known notes
 
-- **Unsigned installer.** Windows SmartScreen will warn on first run — **More info → Run anyway**. Code signing comes later.
-- Requires **Unreal Engine 5.3+** with the **Remote Control API** plugin enabled (WebSocket port `30020`).
-- This is a beta — please report anything odd via an **Issue** or to **rob@realprogear.com**.
+- **Unsigned installer** — Windows SmartScreen warns on first run: **More info → Run anyway**. Code signing comes later; auto-update works unsigned but shows the same warning.
+- Requires **Unreal Engine 5.3+** with the **Remote Control API** plugin (WebSocket port `30020`).
+- **Camera scan** currently matches Cine Camera Actors / cranes by name; if a scan finds nothing, check the actor is a Cine Camera Actor and (for cranes) that the camera is parented to it. A class-based scan that ignores names is coming next.
+- Beta — please report anything odd via an **Issue** or to **rob@realprogear.com**.

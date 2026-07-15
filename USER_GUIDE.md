@@ -25,13 +25,15 @@ A panel-by-panel tour of every control, in the order they appear in the app. Set
 
 ## 1. Top bar
 
-![Top bar](docs/screenshots/02-topbar.png)
+![Top bar](docs/screenshots/02a-topbar.png)
 
-- **Version badge** (`v3.0.0-beta.1`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
+- **Version badge** (`v3.1.0-beta`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
 - **HARDWARE** dot — your gamepad/wheels. Wakes when you click the window and press a physical button.
 - **WS** dot — the internal app↔bridge link.
 - **UE RC** dot — the Unreal Remote Control connection.
 - **Units** — global metric (m/cm) vs imperial (ft/in) for distances and positions.
+- **Dark / Light** — switches the whole interface between the default dark theme and a pale blue-grey light theme. Your choice is remembered, and every accent colour stays the same in both.
+- **Check for updates** — manually checks the release server for a newer build; if one exists it downloads in the background and offers **Restart to update**. Nothing is ever checked automatically on launch.
 
 ---
 
@@ -219,13 +221,39 @@ Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll whe
 
 ![Live axis bars in the debug panel](docs/screenshots/18b-gamepad-debug.png)
 
-The per-axis **"C"** button opens the calibration wizard. Steps 1–3 capture the axis **max**, **min**, and **rest** so uneven hardware maps to a clean −1…+1.
+The per-axis **"C"** button opens the calibration wizard. Steps 1–3 capture the axis **max**, **min**, and **rest** so uneven hardware maps to a clean −1…+1. On the live bar the **blue** marker is the captured max and the **pink** marker is the captured min.
 
 ![Calibration wizard — capture steps](docs/screenshots/19a-cal-wizard.png)
 
-The final **Tune response** step shapes the feel with a preset (Linear / Relaxed / Aggressive) or a custom curve, with a live waveform and curve preview. **Skip** jumps straight to the tuner; **Redo step** re-captures the current step.
+The **Tune response** step shapes the feel, with a live waveform and curve preview. **Skip** jumps straight to the tuner; **Redo step** re-captures the current step.
 
 ![Calibration wizard — Tune response](docs/screenshots/19b-cal-wizard.png)
+
+### Tune response
+
+Pick a **preset** — **Linear** (a straight 1:1 response)…
+
+![Response curve — Linear preset](docs/screenshots/19c-response.png)
+
+…or **Relaxed** / **Aggressive**, or drag the curve to a custom shape. Gentle-at-centre curves give fine control near rest; steeper ends give quicker throws.
+
+![Response curve — Relaxed preset](docs/screenshots/19d-response2.png)
+
+### Signal Filter Lab
+
+Rough or noisy inputs — like a load-cell Grip — can be cleaned up here, live, without touching the device firmware. **Capture** records a few seconds of the axis: the **pink** line is the raw signal, the **cyan** line is the filtered result.
+
+![Signal Filter Lab — captured waveform](docs/screenshots/19e-filter-lab.png)
+
+**+ Signal filter** opens a 3×3 grid of the nine filters — Median, Moving average, EMA low-pass, Double-EMA, Kalman, 1-Euro, Hampel, Deadband and Slew limit — each previewing its effect on your captured signal, with editable parameters. **+ Add** appends a filter to the live chain, so several can stack in order and the combined result drives UE in real time.
+
+![Filter grid — audition and add filters](docs/screenshots/19f-filter-grid.png)
+
+The **ⓘ** icon on each filter explains what it does and what every parameter changes, so you can tune by feel rather than guesswork.
+
+![Filter info popup](docs/screenshots/19g-filter-info.png)
+
+**Save** stores the current chain as a named **filter set** you can **Load** onto any axis or share between machines. **Scan 10s** records raw + filtered + output to a JSON log with a noise-reduction figure, for before/after comparisons.
 
 ---
 
@@ -234,4 +262,21 @@ The final **Tune response** step shapes the feel with a preset (Linear / Relaxed
 ![Alt inputs — OSC / FreeD / MIDI](docs/screenshots/20a-alt-inputs.png)
 
 - **OSC in** — accept OSC from external devices (e.g. the Rexy Wheels). Set **port**, an optional **prefix** filter, and the input **min/max** range. **Sample 10s** records every OSC message for ten seconds and exports a JSON log — the ground-truth capture for diagnosing a device.
-- **MIDI** — **Enable MIDI** reads MIDI controls (knobs, faders, notes, pitch-bend) into the same input path as gamepads, s
+- **MIDI** — **Enable MIDI** reads MIDI controls (knobs, faders, notes, pitch-bend) into the same input path as gamepads, so they bind the same way.
+- **FreeD in** — accept an incoming FreeD tracking stream.
+
+All three feed the same binding system: enable the source, then **Bind** any control to it.
+
+![Alt inputs, connected](docs/screenshots/20b-alt-inputs.png)
+
+---
+
+## 12. OSC output log
+
+![The log panel](docs/screenshots/21-log.png)
+
+A live feed of what the bridge is sending and status messages — handy for confirming a control is reaching UE and for spotting warnings.
+
+---
+
+*Questions or bug reports: rob@realprogear.com*

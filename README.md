@@ -20,6 +20,7 @@ Grab `RexyBridge-Setup-<version>.exe` from the latest release, run it, and follo
 
 - **[Getting Started](GETTING_STARTED.md)** — install the app and connect it to Unreal Engine (start here).
 - **[User Guide](USER_GUIDE.md)** — every control, panel by panel.
+- **[User Guide — print / greyscale (PDF)](USER_GUIDE-light.pdf)** — a light-background, mono-friendly edition for printing.
 
 ---
 
