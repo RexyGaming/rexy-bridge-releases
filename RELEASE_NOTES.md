@@ -1,34 +1,25 @@
-# Rexy Bridge 3.1.0-beta
+# Rexy Bridge 3.2.0-beta
 
-The 3.1 beta — a big step up from the first public beta. Adds in-app updating, a full signal-filter workbench, a light theme, and a print edition of the manual, plus a batch of fixes.
+Camera-discovery and drone-control improvements, plus a fix for the sluggishness some setups saw before Scan → Apply.
 
 **[Install & UE setup guide](GETTING_STARTED.md) · [User guide](USER_GUIDE.md) · [Print / greyscale guide](USER_GUIDE-light.pdf)**
 
 ## New
 
-- **Check for updates** — a button in the top bar checks the release server on demand, downloads a newer build in the background, and offers **Restart to update**. It never checks automatically on launch, so it can't interrupt a session. (From this version on, future updates are one click — no reinstalling.)
-- **Signal Filter Lab** (in the calibration wizard) — capture a live axis waveform, audition nine filters (median, moving-average, EMA, double-EMA, Kalman, 1-Euro, Hampel, deadband, slew) on a 3×3 preview grid, and **chain them live** so the cleaned signal drives UE in real time. Every filter has editable parameters and an ⓘ explainer. Save/load named **filter sets** to reuse across axes and machines.
-- **Live input + output waveforms** on the tuning page — raw device signal and the filtered-and-curved output (in calibrated cyan) side by side, in sync.
-- **Axis scan tools** — a raw-axis capture in Gamepad Debug and a tuning-page scan that logs raw + filtered + output to JSON with a noise-reduction figure, for diagnosing input devices.
-- **Light theme** — a Dark / Light toggle in the top bar (pale blue-grey background, dark text, accent colours preserved).
-- **Print / greyscale user guide** — `USER_GUIDE-light.pdf`, a light-background, mono-friendly edition of the manual for printing.
+- **Rename-safe camera scan** — Scan UE now finds Cine Camera Actors and CameraRig_Crane rigs by their **class**, not their name. If you'd renamed a camera or crane in the Outliner, the old scan could miss it; now it's found whatever it's called. (Default-named actors still use the fast path, so there's no slowdown.)
+- **Drone World / Camera frame** — in Drone mode a **World / Camera** toggle appears by the mode buttons. **World** flies along the world grid (like Dolly); **Camera** makes left/right and forward/back follow where the camera is pointing, staying level with the ground, while up/down stays vertical — classic FPV-drone feel.
 
 ## Fixes
 
-- FreeD / UE output toggle switches correctly.
-- Rebuilt the per-axis calibration wizard (min/max/rest capture + response curve); the min marker is now Rexy pink so it's easy to tell from the blue max marker.
-- Light theme: Filter Lab parameter boxes no longer render dark-on-dark.
-- MIDI input re-enabled; OSC-in port/prefix/range settings apply.
-- Stopping a MoCo recording no longer errors; STOP holds the playhead in place.
-- Various smaller fixes across input handling.
+- **No more requests to unresolved template paths.** Before a Scan → Apply, the bridge used to keep firing Remote Control writes at the placeholder `<YOUR_…>` actors from the first-run template. Every one failed, which showed up as log spam in UE and occasional sluggishness (settings slow to change, crane not driving). The bridge now skips any unresolved path, so those symptoms are gone.
 
 ## Updating
 
-Run the new `RexyBridge-Setup-3.1.0-beta.exe` over the top of your current install — no need to uninstall. Bindings, filter sets, lens boxes and theme are kept (they live in `%AppData%\Roaming\RexyBridge`). After this build, use the in-app **Check for updates** button instead.
+Run `RexyBridge-Setup-3.2.0-beta.exe` over your current install, or just click **Check for updates** in the top bar if you're already on 3.1.0-beta or newer.
 
 ## Known notes
 
-- **Unsigned installer** — Windows SmartScreen warns on first run: **More info → Run anyway**. Code signing comes later; auto-update works unsigned but shows the same warning.
+- **Unsigned installer** — SmartScreen warns on first run: **More info → Run anyway**.
 - Requires **Unreal Engine 5.3+** with the **Remote Control API** plugin (WebSocket port `30020`).
-- **Camera scan** currently matches Cine Camera Actors / cranes by name; if a scan finds nothing, check the actor is a Cine Camera Actor and (for cranes) that the camera is parented to it. A class-based scan that ignores names is coming next.
-- Beta — please report anything odd via an **Issue** or to **rob@realprogear.com**.
+- **Drone dimension limits** (floor/ceiling + bounds) are still in progress — the up/down limit shown in Drone mode is not yet a distance clamp.
+- Beta — report anything odd via an **Issue** or **rob@realprogear.com**.

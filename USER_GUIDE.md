@@ -27,7 +27,7 @@ A panel-by-panel tour of every control, in the order they appear in the app. Set
 
 ![Top bar](docs/screenshots/02a-topbar.png)
 
-- **Version badge** (`v3.1.0-beta`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
+- **Version badge** (`v3.2.0-beta`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
 - **HARDWARE** dot — your gamepad/wheels. Wakes when you click the window and press a physical button.
 - **WS** dot — the internal app↔bridge link.
 - **UE RC** dot — the Unreal Remote Control connection.
@@ -59,7 +59,7 @@ Before scanning, the camera row is empty and waiting.
 
 ![Camera row before scanning](docs/screenshots/03a-camera-row.png)
 
-Click **⌕ Scan UE** to auto-discover every Cine Camera Actor and CameraRig_Crane in your open level — no RexyControl preset, no `mappings.json` editing. Review the result, then **Apply** for this session or **Apply + Save** to persist it.
+Click **⌕ Scan UE** to auto-discover every Cine Camera Actor and CameraRig_Crane in your open level — no RexyControl preset, no `mappings.json` editing. Actors are matched by **class**, so it finds them whatever you've named them in the Outliner. Review the result, then **Apply** for this session or **Apply + Save** to persist it.
 
 ![Auto-scan results — Apply / Apply + Save](docs/screenshots/03b-camera-row.png)
 
@@ -146,6 +146,11 @@ Each has a slider, **Bind**, **Inv**, a live readout, and the full **S / C / D /
 - **Crane** — the grip swings a jib arm around its base (yaw, pitch, scope/arm-length).
 - **Dolly** — straight ground translation (X/Y/Z), no arm pivot.
 - **Drone** — free flight through 3D space.
+
+In **Drone** mode a **World / Camera** toggle appears next to the mode buttons:
+
+- **World** — left/right, forward/back and up/down follow the world grid, exactly like Dolly.
+- **Camera** — left/right and forward/back follow where the camera is pointing (kept level with the ground); up/down stays vertical. Classic FPV-drone feel.
 
 The grip cards (craneYaw, scope, cranePitch) use the same binding + S/C/D/F model as the wheels.
 
