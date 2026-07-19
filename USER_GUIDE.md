@@ -1,4 +1,4 @@
-# Rexy Bridge 3.0 — User Guide
+# Rexy Bridge 3.4 — User Guide
 
 A panel-by-panel tour of every control, in the order they appear in the app. Setup and UE connection are covered in **GETTING_STARTED.md**; this guide assumes you're connected and driving a camera.
 
@@ -27,13 +27,14 @@ A panel-by-panel tour of every control, in the order they appear in the app. Set
 
 ![Top bar](docs/screenshots/02a-topbar.png)
 
-- **Version badge** (`v3.2.0-beta`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
+- **Version badge** (`v3.3.0-beta`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
 - **HARDWARE** dot — your gamepad/wheels. Wakes when you click the window and press a physical button.
 - **WS** dot — the internal app↔bridge link.
 - **UE RC** dot — the Unreal Remote Control connection.
 - **Units** — global metric (m/cm) vs imperial (ft/in) for distances and positions.
 - **Dark / Light** — switches the whole interface between the default dark theme and a pale blue-grey light theme. Your choice is remembered, and every accent colour stays the same in both.
 - **Check for updates** — manually checks the release server for a newer build; if one exists it downloads in the background and offers **Restart to update**. Nothing is ever checked automatically on launch.
+- **Font** — S / M / L text size for the whole interface; your choice is remembered.
 
 ---
 
@@ -70,6 +71,14 @@ Discovered cameras appear as buttons. Click one to make it the **active** camera
 Each camera button can itself be **bound** to a key or gamepad button for hands-free switching mid-shot.
 
 ![Binding a button to switch the active camera](docs/screenshots/03d-camera-row.png)
+
+### On UE 5.8 — allow remote function calls
+
+UE 5.8 blocks remote function calls by default, so **Scan UE finds nothing** until you turn this on (one time, per project). In UE: **Project Settings → search "Allow Any Remote Function Call" → tick it on**.
+
+![Remote Control security — the setting off (5.8 default)](docs/screenshots/22a-rc-security.png)
+
+![Remote Control security — "Allow Any Remote Function Call" ticked on](docs/screenshots/22b-rc-security.png)
 
 ---
 
@@ -147,12 +156,17 @@ Each has a slider, **Bind**, **Inv**, a live readout, and the full **S / C / D /
 - **Dolly** — straight ground translation (X/Y/Z), no arm pivot.
 - **Drone** — free flight through 3D space.
 
-In **Drone** mode a **World / Camera** toggle appears next to the mode buttons:
+In **Drone** mode a **flight-frame** selector appears next to the mode buttons, with three options:
 
-- **World** — left/right, forward/back and up/down follow the world grid, exactly like Dolly.
-- **Camera** — left/right and forward/back follow where the camera is pointing (kept level with the ground); up/down stays vertical. Classic FPV-drone feel.
+- **Cine** — flies on the world grid; you aim the camera independently with the wheels. Left/right, forward/back and up/down all follow the world axes, exactly like Dolly.
+- **Cine/FPV** — left/right and forward/back follow **where the camera is panned**, but stay **parallel to the ground** regardless of tilt or roll; up/down is always a **true vertical** jib. So with the camera tilted 45° down, forward still travels flat in the pan direction, and a rolled camera still tracks level left/right. This is the natural "operator flying a level drone while framing freely" feel.
+- **FPV** — everything is relative to the camera body: left/right, forward/back **and** up/down all follow the lens, so up/down rides the roll/tilt. True first-person-drone flight.
 
-The grip cards (craneYaw, scope, cranePitch) use the same binding + S/C/D/F model as the wheels.
+**⟳ Reset grid** (next to the frame buttons) re-snaps the Cine/FPV ground grid to the camera's current pan heading. In absolute-pan mode the grid follows the pan wheel live; use Reset if it ever drifts out of sync (e.g. after operating in continuous-wheel mode).
+
+**Hide Crane** (in the Crane Base header, and as a bindable card in the Functions panel) vanishes the crane rig from both the render and the editor viewport, so the arm never appears in shot — press again to bring it back.
+
+The grip cards (craneYaw, scope, cranePitch) use the same binding + S/C/D/F model as the wheels. When **Limits** is unticked, the per-axis Min/Max fields grey out and movement runs unclamped.
 
 ### Crane Base
 
@@ -281,6 +295,80 @@ All three feed the same binding system: enable the source, then **Bind** any con
 ![The log panel](docs/screenshots/21-log.png)
 
 A live feed of what the bridge is sending and status messages — handy for confirming a control is reaching UE and for spotting warnings.
+
+---
+
+## 13. Remote viewing — phone, tablet, or a second laptop
+
+The Rexy Bridge window you see on the PC is not the bridge itself — it's just a web control panel talking to the bridge over the network. That means **any device on the same Wi-Fi/LAN can open the exact same panel in a browser** and drive the same cameras, no install required. Think of it as a wireless director's monitor / second operator station.
+
+**How to open it on another device**
+
+1. On the PC running Rexy Bridge, find its local IP address. Open a Command Prompt and type `ipconfig` — use the **IPv4 Address** (something like `192.168.1.42`).
+2. On the phone/tablet/laptop — connected to the **same network** — open a browser and go to:
+
+   `http://192.168.1.42:9000`  *(swap in your PC's IP)*
+
+3. The full control panel loads. It's live and **in sync**: a mode change, a slider, or a binding made on one device shows on all of them, because every panel is a client of the one bridge.
+
+**Good to know**
+
+- The bridge serves on **port 9000** to the whole LAN, so no extra setup is needed — just the IP and that port.
+- Physical **wheels / gamepads / MIDI** are read by whichever device they're plugged into. A tablet with no controller is perfect as a **touch surface** (sliders, mode buttons, focus, takes) or a monitoring view, while the PC handles the hardware wheels.
+- If the page won't load: both devices must be on the **same network** (not guest Wi-Fi / not a VPN), and a PC firewall prompt for Rexy Bridge must be **allowed** the first time.
+- It's the same panel, so everything in this guide applies identically on the remote device.
+
+---
+
+## 14. Rendering your move out of Unreal
+
+**The editor viewport is not what your final render looks like.** The viewport runs in real time at a variable frame rate with little or no motion blur, so camera moves can look steppy or strobe against high-contrast detail — bright lights, foreground objects. A proper render is done offline, one frame at a time, and looks considerably smoother. Judge your move from a render, not the viewport.
+
+### Capturing the move
+
+Rexy Bridge drives the camera live, so first bake that motion into a Level Sequence:
+
+1. **Window → Cinematics → Take Recorder**, add your Cine Camera Actor (and crane) as sources.
+2. Press **Record**, perform or play back the move, then stop.
+
+Take Recorder produces a **master sequence** plus a `_Subscenes` folder holding one sequence per recorded actor:
+
+```
+Scene_1_17                        <- the master: render THIS
+Scene_1_17_Subscenes/
+    CineCameraActor2_Scene_1_17
+    CameraRig_Crane_Scene_1_17
+```
+
+> ⚠️ Render the **master**, not a subscene. A subscene holds one actor's animation with no camera and no Camera Cuts track — the render will report **"no shot"** and render from the wrong viewpoint.
+
+Open the master in Sequencer and confirm it has a **Camera Cuts** track pointing at your Cine Camera Actor (scrubbing should show the camera's view). If it's missing: **+ Track → Camera Cut Track**, then **+ Camera** → your camera, and save.
+
+### Rendering — the setting that matters
+
+**Window → Cinematics → Movie Render Queue → + Render**, pick the master sequence, then click the config link:
+
+| Setting | Suggested | Why |
+|---|---|---|
+| **Temporal Sample Count** | **8** | **The important one.** Accumulates 8 samples per output frame to produce real motion blur. This is what smooths small steps in camera motion — at 1 you get none. |
+| Spatial Sample Count | 1 | Anti-aliasing within a frame; doesn't affect motion. |
+| Output Resolution | 1280×720 for tests | Keeps memory use and render time sane. |
+| Output Type | JPG Sequence | Small and dependency-free. EXR is huge; MP4/ProRes need an encoder configured. |
+| Custom Start/End Frame | ~120 frames | 4 seconds is plenty to judge smoothness. |
+
+Raise resolution and sample count for a final render; keep them low while testing.
+
+If a render crashes, it's almost always memory — MRQ holds every temporal sample of a frame at full resolution at once. Drop the resolution first, then Temporal Samples to 4, and close other applications (including any second Unreal instance).
+
+### If Take Recorder stops with "Timecode rolled over"
+
+Unreal generates timecode from your PC's clock by default. Those wall-clock values become very large frame numbers, which can overflow while a take is being finalised — reported as a rollover.
+
+**Fix:** *Project Settings → Engine → General Settings → Timecode* → untick **Generate Default Timecode**, leave **Timecode Provider** empty, and restart the editor. Unless you're syncing to external gear, you don't need engine timecode at all.
+
+### A note on input smoothness
+
+Motion blur hides a lot, but it can't invent detail that was never sampled. If a move still looks stepped in a render, check the input itself — the **Signal Filter Lab** (section 10) shows the raw device signal, and the tune-scan export records its true resolution and update rate. A low-resolution or slow-reporting control will quantise the move before Rexy Bridge ever sees it, and no amount of filtering fully recovers it.
 
 ---
 

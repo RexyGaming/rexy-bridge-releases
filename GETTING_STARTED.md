@@ -8,12 +8,12 @@ There are two halves to setup: **install Rexy Bridge** (5 minutes) and **prepare
 
 ## Part 1 — Install Rexy Bridge
 
-1. Download **`RexyBridge-Setup-3.2.0-beta.exe`**.
+1. Download **`RexyBridge-Setup-3.4.0-beta.exe`**.
 2. Double-click it. Windows will show a blue **"Windows protected your PC"** dialog — this is because the beta isn't code-signed yet, **not** a warning about the app itself. Click **More info → Run anyway**.
 3. Follow the installer. You can choose the install location.
 4. Launch **Rexy Bridge** from the Start menu.
 
-When it opens you'll see the control panel with a **`v3.2.0-beta`** badge in the top-left next to the logo. If you ever don't see that badge after an update, you're looking at a cached window — press **Ctrl+Shift+R** to reload.
+When it opens you'll see the control panel with a **`v3.4.0-beta`** badge in the top-left next to the logo. If you ever don't see that badge after an update, you're looking at a cached window — press **Ctrl+Shift+R** to reload.
 
 Rexy Bridge is self-contained: the app window, the bridge that talks to UE, and the gamepad reader are all inside it. Nothing else to install.
 
@@ -82,13 +82,16 @@ Top of the app, the **osc / ue** vs **freed** toggle chooses what Rexy Bridge dr
 | Symptom | Fix |
 |---|---|
 | **Windows blocks the installer** | Expected for an unsigned beta — **More info → Run anyway**. |
-| **App looks like an old version** | Press **Ctrl+Shift+R** in the window to reload. Confirm the **v3.2.0-beta** badge shows. |
+| **App looks like an old version** | Press **Ctrl+Shift+R** in the window to reload. Confirm the **v3.4.0-beta** badge shows. |
 | **HARDWARE stays grey** | Click the app window, then **press a button** on the controller (not just move a stick/wheel). |
 | **WS OFFLINE** | Another copy of Rexy Bridge may be running and holding the port — close it and relaunch. |
 | **UE RC won't connect** | UE project not open, Remote Control API plugin not enabled, or WebSocket port isn't `30020`. Re-check Part 2. |
 | **Scan UE finds nothing** | You're using a plain Camera Actor instead of a **Cine** Camera Actor, or UE isn't reachable yet (fix UE RC first). |
+| **Scan UE finds nothing on UE 5.8+** (log shows *"GetAllLevelActors … not allowed by remote control settings"*) | UE 5.8 blocks remote function calls by default. **Project Settings → Plugins → Remote Control → Security → tick "Allow Any Remote Function Call"**, then Scan again. Three things to know: it's **per-project**, so every new project needs it set again; it does **not** travel with the app or your config; and if it's already ticked but Scan still finds nothing, **untick it, re-tick it**, then Scan — the setting sometimes needs re-applying to take effect. |
+| **Scan finds no cameras, but the sliders still drive the camera** | Normal, and it tells you exactly what's wrong. Driving the camera uses the object paths already saved in your config from a previous successful scan — that keeps working. **Scan** is a separate call (`GetAllLevelActors`) which is the thing being blocked. So this combination almost always means the *"Allow Any Remote Function Call"* setting above, not a lost connection. |
 | **Camera moves the wrong way** | Use the **Inv** button on that control, or re-bind pushing the control in your "positive" direction first. |
 | **Stick/wheel drifts at rest** | Gamepad Debug panel → **Null Drift (5s)** to null residual offset, or the per-axis **C** wizard for full range calibration. |
+| **Motion is steppy or judders, but the raw *and* filtered input both look smooth** | Not an input problem — your PC is likely maxed out and Unreal can't process the Remote Control round-trip fast enough. Free up disk space and RAM, close other heavy apps (including extra UE instances), lower the editor's viewport / scalability settings, or use a more powerful machine. A smooth signal in Rexy Bridge that stutters in UE is the tell-tale sign. |
 
 ---
 
@@ -100,11 +103,3 @@ Top of the app, the **osc / ue** vs **freed** toggle chooses what Rexy Bridge dr
 For what every control does, see **USER_GUIDE.md**.
 
 *Questions or bug reports: rob@realprogear.com*
-
----
-
-## Updating Rexy Bridge
-
-You don't need to uninstall. Download the newer `RexyBridge-Setup-*.exe` and run it over the top — it upgrades in place. Your settings (bindings, filter sets, lens boxes, theme) live in `%AppData%\Roaming\RexyBridge`, separate from the program, so they're preserved across updates.
-
-From beta.3 onward there's also a **Check for updates** button in the top bar: it checks on demand, downloads a newer build in the background, and offers **Restart to update**. It never checks automatically on launch.
