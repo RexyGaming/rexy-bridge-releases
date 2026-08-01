@@ -1,4 +1,4 @@
-# Rexy Bridge 3.4 — User Guide
+# Rexy Bridge 3.5 — User Guide
 
 A panel-by-panel tour of every control, in the order they appear in the app. Setup and UE connection are covered in **GETTING_STARTED.md**; this guide assumes you're connected and driving a camera.
 
@@ -27,7 +27,8 @@ A panel-by-panel tour of every control, in the order they appear in the app. Set
 
 ![Top bar](docs/screenshots/02a-topbar.png)
 
-- **Version badge** (`v3.3.0-beta`) — the running build. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
+- **Version badge** (`v3.5.0-beta`) — the running build; it now **increments every dev build**, so it tells you at a glance exactly which build you're on. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
+- **⟲ Reset** — clears all saved settings and bindings on this machine and reloads from defaults. Use it if a new build seems to hang on stale data; your exported `.json` config files are **not** touched.
 - **HARDWARE** dot — your gamepad/wheels. Wakes when you click the window and press a physical button.
 - **WS** dot — the internal app↔bridge link.
 - **UE RC** dot — the Unreal Remote Control connection.
@@ -168,6 +169,8 @@ In **Drone** mode a **flight-frame** selector appears next to the mode buttons, 
 
 The grip cards (craneYaw, scope, cranePitch) use the same binding + S/C/D/F model as the wheels. When **Limits** is unticked, the per-axis Min/Max fields grey out and movement runs unclamped.
 
+Real-world position limits — a world safe box, a box that follows the crane base, and a crane **height** cap — live in **Soft Stops & Camera Box** (section 9).
+
 ### Crane Base
 
 The base (baseX/Y/Z) drives the rig's pivot, with two modes:
@@ -196,7 +199,37 @@ Live **X / Y / Z** readouts, with **Set** (send a manual position; blank axes ke
 
 ---
 
-## 9. Virtual MoCo
+## 9. Soft Stops & Camera Box
+
+Soft Stops and the Camera Box are the safety rails — they stop the camera *before* it reaches somewhere you don't want it, easing into the limit rather than hitting it. Both are enforced on the bridge, so they hold no matter what's driving the camera: wheels, grip, a recorded move, or a remote operator.
+
+### Soft Stops — per-parameter limits
+
+Turn on the **master** switch, then enable a stop on any parameter and set its **Min**, **Max** and **Feather**:
+
+- **Min / Max** — the range the value is held within, in the parameter's own units (degrees for the head and crane axes, cm for base and camera moves, mm / f-stop for the lens). The **live** button on each field captures the parameter's current value, so you can drive the camera to a limit and press it rather than typing a number.
+- **Feather** — how gently the camera decelerates into the wall. `0` is a hard stop; higher eases it in over a wider zone, the same feel as the S/C/D/F feather.
+- **Stop → Min / Stop → Max** — snap every enabled stop to where the camera is right now, in one click; both are bindable in the Functions panel.
+- Stops are saved **per camera**, and grey out when they don't apply to the current mode (e.g. the base stops are crane-only).
+
+Soft stops hold on **both** kinds of move. On **absolute** controls (pan / tilt / roll in Absolute wheel mode, focus / iris / zoom, crane yaw / scope / pitch, base in Absolute mode) the value is simply clamped. On **velocity** controls — continuous ("Relative") wheels and the crane base in Relative mode — the bridge tracks the accumulating angle or position and feathers the *speed* into the limit, so an endless-rotation pan decelerates and stops exactly at your degree limit and reverses straight back out.
+
+Whenever an axis is up against a limit, its card flashes a **STOP** and its slider pins to the wall, so what you see always matches the real rig. The command stops dead at the limit instead of winding up past it, so the move reverses the instant you back off.
+
+> The velocity walls read the rig's position once when you enter the mode. If you reposition the rig by hand in Unreal mid-take, re-enter the mode (flip Relative off/on, or re-pick the grip mode) to re-sync.
+
+### Camera Box — a real-world safe volume
+
+Below the per-parameter stops, the **Camera Box** limits the camera's **world position** — independent **X**, **Y** and **Z** limits in cm, each with its own on-switch and feather, enforced live in dolly and drone. Use it to keep the camera inside the set, above the floor, or under the lighting grid. Each axis has a **live** button that reads the camera's current world position.
+
+- **Zero offset (X / Y / Z)** — the box's Min/Max are measured from this offset instead of world zero, so you can place the box anywhere in the world.
+- **Follow crane base** — locks the offset to the crane base's live position, so the whole box **travels with the base**. That turns the world box into a *crane-local* envelope: the camera stays limited relative to the base wherever the base rolls.
+- In **crane** mode the box's **Z axis caps the camera height**: the bridge works the height out from the arm length and pitch (`ArmLength × sin(pitch)`) and eases scope and pitch into your ceiling/floor, whichever you push. It auto-calibrates to your exact rig the moment you enter crane mode — you'll see a `Crane height calibrated` line in the log. (Horizontal reach from the base is best limited with the **Scope** grip soft stop.)
+- In **FPV** drone flight the box becomes a **local** envelope — how far you've flown from the point you entered FPV, in the camera's own axes.
+
+---
+
+## 10. Virtual MoCo
 
 Record, edit, and play back moves across every bound parameter.
 
@@ -231,7 +264,7 @@ Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll whe
 
 ---
 
-## 10. Gamepad Debug & calibration
+## 11. Gamepad Debug & calibration
 
 ![The Gamepad Debug panel](docs/screenshots/18a-gamepad-debug.png)
 
@@ -240,7 +273,7 @@ Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll whe
 
 ![Live axis bars in the debug panel](docs/screenshots/18b-gamepad-debug.png)
 
-The per-axis **"C"** button opens the calibration wizard. Steps 1–3 capture the axis **max**, **min**, and **rest** so uneven hardware maps to a clean −1…+1. On the live bar the **blue** marker is the captured max and the **pink** marker is the captured min.
+The per-axis **"C"** button opens the calibration wizard — it reads **C·ƒ** when a live filter chain is running on that axis, and turns cyan once the axis is calibrated. The same wizard is available on every OSC / MIDI / FreeD input from the Other Inputs panel (section 12). Steps 1–3 capture the axis **max**, **min**, and **rest** so uneven hardware maps to a clean −1…+1. On the live bar the **blue** marker is the captured max and the **pink** marker is the captured min.
 
 ![Calibration wizard — capture steps](docs/screenshots/19a-cal-wizard.png)
 
@@ -276,7 +309,7 @@ The **ⓘ** icon on each filter explains what it does and what every parameter c
 
 ---
 
-## 11. Other inputs — OSC, MIDI, FreeD
+## 12. Other inputs — OSC, MIDI, FreeD
 
 ![Alt inputs — OSC / FreeD / MIDI](docs/screenshots/20a-alt-inputs.png)
 
@@ -286,11 +319,13 @@ The **ⓘ** icon on each filter explains what it does and what every parameter c
 
 All three feed the same binding system: enable the source, then **Bind** any control to it.
 
+**Calibrate and filter any input.** Each live input row has a **C** button that opens the same calibration wizard and **Signal Filter Lab** as the gamepad axes (section 11) — so an OSC, MIDI or FreeD stream gets the full treatment: capture its range and rest, shape a response curve, and stack a live filter chain to clean up a noisy feed. The button reads **C·ƒ** when a filter chain is running and turns cyan once the input is calibrated.
+
 ![Alt inputs, connected](docs/screenshots/20b-alt-inputs.png)
 
 ---
 
-## 12. OSC output log
+## 13. OSC output log
 
 ![The log panel](docs/screenshots/21-log.png)
 
@@ -298,7 +333,7 @@ A live feed of what the bridge is sending and status messages — handy for conf
 
 ---
 
-## 13. Remote viewing — phone, tablet, or a second laptop
+## 14. Remote viewing — phone, tablet, or a second laptop
 
 The Rexy Bridge window you see on the PC is not the bridge itself — it's just a web control panel talking to the bridge over the network. That means **any device on the same Wi-Fi/LAN can open the exact same panel in a browser** and drive the same cameras, no install required. Think of it as a wireless director's monitor / second operator station.
 
@@ -320,7 +355,7 @@ The Rexy Bridge window you see on the PC is not the bridge itself — it's just 
 
 ---
 
-## 14. Rendering your move out of Unreal
+## 15. Rendering your move out of Unreal
 
 **The editor viewport is not what your final render looks like.** The viewport runs in real time at a variable frame rate with little or no motion blur, so camera moves can look steppy or strobe against high-contrast detail — bright lights, foreground objects. A proper render is done offline, one frame at a time, and looks considerably smoother. Judge your move from a render, not the viewport.
 
@@ -368,7 +403,7 @@ Unreal generates timecode from your PC's clock by default. Those wall-clock valu
 
 ### A note on input smoothness
 
-Motion blur hides a lot, but it can't invent detail that was never sampled. If a move still looks stepped in a render, check the input itself — the **Signal Filter Lab** (section 10) shows the raw device signal, and the tune-scan export records its true resolution and update rate. A low-resolution or slow-reporting control will quantise the move before Rexy Bridge ever sees it, and no amount of filtering fully recovers it.
+Motion blur hides a lot, but it can't invent detail that was never sampled. If a move still looks stepped in a render, check the input itself — the **Signal Filter Lab** (section 11) shows the raw device signal, and the tune-scan export records its true resolution and update rate. A low-resolution or slow-reporting control will quantise the move before Rexy Bridge ever sees it, and no amount of filtering fully recovers it.
 
 ---
 
