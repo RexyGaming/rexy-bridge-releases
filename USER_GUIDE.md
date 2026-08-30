@@ -1,4 +1,4 @@
-# Rexy Bridge 3.5 — User Guide
+# Rexy Bridge 3.6 — User Guide
 
 A panel-by-panel tour of every control, in the order they appear in the app. Setup and UE connection are covered in **GETTING_STARTED.md**; this guide assumes you're connected and driving a camera.
 
@@ -27,7 +27,7 @@ A panel-by-panel tour of every control, in the order they appear in the app. Set
 
 ![Top bar](docs/screenshots/02a-topbar.png)
 
-- **Version badge** (`v3.5.0-beta`) — the running build; it now **increments every dev build**, so it tells you at a glance exactly which build you're on. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
+- **Version badge** (`v3.6.0-beta`) — the running build; it tells you at a glance exactly which build you're on. If it's missing or wrong after an update, press **Ctrl+Shift+R**.
 - **⟲ Reset** — clears all saved settings and bindings on this machine and reloads from defaults. Use it if a new build seems to hang on stale data; your exported `.json` config files are **not** touched.
 - **HARDWARE** dot — your gamepad/wheels. Wakes when you click the window and press a physical button.
 - **WS** dot — the internal app↔bridge link.
@@ -270,6 +270,17 @@ Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll whe
 
 - **Show / Hide** — toggles the live view of every axis and button on connected controllers.
 - **Null Drift (5s)** — samples all axes for 5 seconds and stores the average as zero, nulling resting drift. **Clear Cal** removes it.
+
+### High-resolution / multi-device input (SDL)
+
+By default the panel reads controllers through the browser's gamepad API, which caps at **4 devices** and quantises the Rexy wheels to 8-bit. The **SDL 16-bit · multi** toggle in this panel switches to reading joysticks directly in the bridge's main process instead:
+
+- **Full 16-bit resolution** — the wheels' true fine values reach the panel, not the browser's coarse 8-bit version. This is what clears the last of the fine-motion stepping.
+- **More than 4 devices** — drive the bridge from many Rexy devices at once.
+
+Calibration and the live view read the SDL devices too, so a wheel calibrated in SDL mode captures full resolution. It needs the **installed desktop app** (SDL runs inside the bridge, so a remote browser panel can't use the host's USB wheels). Because SDL numbers devices differently from the browser, **re-bind your axes after switching sources**.
+
+**⤓ Scan (SDL)** reads a wheel via the SDL path and reports its true resolution and device report rate — handy for checking wheel firmware — while **⤓ Scan axes** does the same through the browser path. In the calibration wizard the **raw** readout shows the normalised value plus the ~16-bit device code, so you can read the actual code and tell 8-bit from 16-bit at a glance as you move an axis.
 
 ![Live axis bars in the debug panel](docs/screenshots/18b-gamepad-debug.png)
 
