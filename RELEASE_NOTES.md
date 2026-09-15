@@ -1,22 +1,24 @@
-# Rexy Bridge 3.6.0-beta
+# Rexy Bridge 3.6.2-beta
 
-The many-wheels release: read **every** Rexy device at once, at full **16-bit** resolution, straight into the bridge — past the 4-controller ceiling the browser was imposing.
+The tidy-up release: every section of the panel now **collapses to a colour-coded header**, so you can fold away the parts you're not using and keep the controls you care about in view. Everything from the **3.6.0** many-wheels release (16-bit SDL input, many devices) is still here.
 
 **[Install & UE setup guide](GETTING_STARTED.md) · [User guide](USER_GUIDE.md) · [Print / greyscale guide](USER_GUIDE-light.pdf)**
 
 ## New
 
-- **SDL input mode — 16-bit, many devices.** A new toggle in the Gamepad Debug panel — **"SDL 16-bit · multi"** — switches the bridge from the browser gamepad API to reading joysticks **directly in its main process** via SDL. Two big wins:
-  - **Full 16-bit resolution.** The browser gamepad API was quantising the Rexy wheels down to 8-bit (1/127 steps); SDL passes the wheels' true 16-bit values (~65,000 steps) straight through, which is what removes the last of the fine-motion stepping.
-  - **More than 4 devices.** The browser Gamepad API caps at 4 controllers; SDL has no such limit, so you can drive the bridge from many Rexy devices at once.
+- **Collapsible panels.** Every section — Rexy Wheels, Rexy Focus, Rexy Grip, Functions, Virtual MoCo, Soft Stops, Gamepad Debug and Alt Inputs — now has a **caret** and a **colour patch** in its header. Click the header (or the arrow) to fold that section down to a single labelled line; click again to open it. Each panel remembers whether you left it open or closed, so your layout comes back the way you set it.
+  - **Consistent headers.** Gamepad Debug and Alt Inputs used to have a separate *Show / Hide* button — they now match every other section with the same caret-and-colour header.
+  - **Soft Stops** sits above its box like the rest, so collapsing it leaves a clean single-line header.
+- **Cleaner layout order.** **Functions** now sits directly below **Rexy Grip**, and **Soft Stops** sits directly below **Virtual MoCo** — grouping the controls that belong together and shortening the scroll when panels are folded away.
 
-  Calibration, null-drift and the live debug view all read the SDL devices too, so a wheel calibrated in SDL mode captures full resolution. Needs the installed desktop app (SDL runs in the bridge's main process). Device numbering differs from the browser, so **re-bind your axes after switching** sources.
-- **SDL / USB axis scan.** A **"⤓ Scan (SDL)"** button reads a wheel via the main-process SDL path and reports true resolution (step size / implied code count) and the real device report rate — bypassing the browser's ~60 fps read-lock — for verifying wheel firmware.
-- **Raw 16-bit code in the calibration wizard.** The `raw` readout now shows the normalised value **plus the ~16-bit device code (×32767)**, so you can read the actual code and tell 8-bit from 16-bit at a glance as you move an axis.
+## Also in the 3.6 line (from 3.6.0-beta)
 
-## Fixes
+- **SDL input mode — 16-bit, many devices.** The **"SDL 16-bit · multi"** toggle in the Gamepad Debug panel reads your wheels directly in the bridge's main process: full 16-bit resolution (not the browser's 8-bit) and **more than 4 devices** at once.
+- **SDL / USB axis scan** and **raw 16-bit code in the calibration wizard** for verifying wheel firmware resolution and report rate.
 
-- **Signal Filter Lab capture** now draws in the same orientation as the live waveform (newest at the left) — it had been showing the frozen capture mirrored.
+## Note on 3.6.1
+
+3.6.1 was a **macOS-only** build (arm64 + x64 for Apple Silicon / Intel Macs) with no functional changes on Windows. 3.6.2 brings both platforms back to parity.
 
 ## UE 5.8 note (unchanged, still important)
 
@@ -26,7 +28,7 @@ UE 5.8 **blocks remote function calls by default**, which stops Scan UE from lis
 
 ## Updating
 
-Run `RexyBridge-Setup-3.6.0-beta.exe` over your current install, or click **Check for updates** in the top bar.
+Run `RexyBridge-Setup-3.6.2-beta.exe` over your current install, or click **Check for updates** in the top bar.
 
 ## Known notes
 
@@ -34,5 +36,4 @@ Run `RexyBridge-Setup-3.6.0-beta.exe` over your current install, or click **Chec
 - **Re-bind after switching input source** — Browser and SDL number devices differently, so bindings made under one won't line up under the other.
 - **Unsigned installer** — SmartScreen warns on first run: **More info → Run anyway**.
 - Requires **Unreal Engine 5.3+** (5.8 supported) with the **Remote Control API** plugin (WebSocket port `30020`).
-- If a move still looks stepped in a render on the browser input path, that's the 8-bit quantisation — switch to **SDL input mode** for full 16-bit, or use the **Signal Filter Lab** / tune-scan export to see the raw device signal.
 - Beta — report anything odd via an **Issue** or **rob@realprogear.com**.

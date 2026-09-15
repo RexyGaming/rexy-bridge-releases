@@ -21,6 +21,8 @@ A panel-by-panel tour of every control, in the order they appear in the app. Set
 
 **Inv / Hold / Reset.** **Inv** flips a binding's direction. **Hold** (on wheels) freezes that axis so its binding is ignored. **Reset** returns the control to centre/default.
 
+**Collapsible panels.** Every section — Rexy Wheels, Functions, Rexy Focus, Rexy Grip, Virtual MoCo, Soft Stops, Gamepad Debug and Alt Inputs — has a **caret** (▾) and a **colour patch** in its header. Click the header, or the caret, to fold that section down to a single labelled line and open it again. Each panel remembers whether you left it open or closed, so your layout comes back the way you set it next time you launch. Use it to hide the parts of the rig you're not using and keep the controls you care about in view. (In the panel, **Functions** sits just below **Rexy Grip**, and **Soft Stops** just below **Virtual MoCo** — the guide below is grouped by topic rather than strict top-to-bottom order.)
+
 ---
 
 ## 1. Top bar
