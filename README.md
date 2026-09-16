@@ -10,9 +10,17 @@ This repository is the **download page and documentation** for Rexy Bridge. (The
 
 **[→ Download the latest release](../../releases/latest)**
 
-Grab `RexyBridge-Setup-<version>.exe` from the latest release, run it, and follow the setup guide below.
+Rexy Bridge runs on **Windows** and **macOS**:
 
-> **Heads-up — Windows SmartScreen.** The installer isn't code-signed yet, so Windows shows a blue **"Windows protected your PC"** dialog. Click **More info → Run anyway**. This is expected for a beta and is not a warning about the app itself.
+- **Windows** — grab `RexyBridge-Setup-<version>.exe`, run it, and follow the setup guide below.
+- **macOS — Apple Silicon (M-series)** — grab `RexyBridge-Setup-<version>-arm64.dmg`, open it, and drag **Rexy Bridge** to Applications.
+- **macOS — Intel** — grab `RexyBridge-Setup-<version>-x64.dmg` instead.
+
+> **Heads-up — the installers aren't code-signed yet.**
+> - **Windows** shows a blue **"Windows protected your PC"** dialog — click **More info → Run anyway**.
+> - **macOS** blocks a normal double-click — **right-click (or Control-click) the app → Open → Open**. You only need to do this once. On first controller use, allow **Input Monitoring** (System Settings → Privacy & Security → Input Monitoring).
+>
+> This is expected for a beta and is not a warning about the app itself.
 
 ---
 
@@ -26,7 +34,7 @@ Grab `RexyBridge-Setup-<version>.exe` from the latest release, run it, and follo
 
 ## Requirements
 
-- **Windows** (64-bit)
+- **Windows** (64-bit) **or macOS** (Apple Silicon or Intel)
 - **Unreal Engine 5.3+** with the **Remote Control API** plugin enabled
 - A Cine Camera Actor in your level (a crane rig is optional)
 
