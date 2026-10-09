@@ -1,4 +1,4 @@
-# Rexy Bridge 3.6 — User Guide
+# Rexy Bridge 3.7 — User Guide
 
 A panel-by-panel tour of every control, in the order they appear in the app. Setup and UE connection are covered in **GETTING_STARTED.md**; this guide assumes you're connected and driving a camera.
 
@@ -242,7 +242,7 @@ Record, edit, and play back moves across every bound parameter.
 ![The MoCo transport row](docs/screenshots/14-moco-transport.png)
 
 - **● REC / ■ STOP / ▶ PLAY** — each with a **Bind** button. STOP leaves the playhead where it is; **Home** (or Rewind) returns it to the start.
-- **Bake** — a 3-2-1 countdown on REC/PLAY so you can sync with UE's Take Recorder.
+- **Countdown** — a 3-2-1 countdown on REC/PLAY so you can sync with UE's Take Recorder (it used to be called *Bake*).
 - **⌂ HOME** — snaps play-armed tracks to their start values and the playhead to 0.
 - **◆ MARK** — drops a mark on every bound track at the playhead.
 - **Jog: Bind** — bind an analogue wheel/axis (or keys) to **shuttle** the playhead: push from centre to scrub forward/back, speed proportional to deflection, centre = hold.
@@ -263,6 +263,23 @@ Colour-coded per track. Scrub by dragging the playhead, zoom with the scroll whe
 - **R — Record** — captures live input on the next REC (recording over a track auto-erases its marks).
 - **E — Edit** — drag anchor dots to reshape. Available once a track has recorded data **or 2+ marks** — entering E on a marked-but-unrecorded track lays down draggable anchors that smooth the marks into **S-curves**.
 - **M — Mark** — drops a fixed point at the playhead; the curve always passes through marks. Placing a mark auto-adds a start mark at t=0 so the move has a defined beginning.
+
+### Tracks without a binding, Mark all, undo
+
+- **＋ Add track** — give any parameter a track without binding a control to it: pick it from the list, then drag its slider and drop marks (**M**), or arm **R** to record it. On a free camera the grip tracks are named **X / Y / Z** (and there are no Base tracks).
+- **◆ Mark all** (bindable) — drops a mark at the playhead on every track that **already has marks**, each at its current value. The transport's **◆ MARK** still marks every bound track.
+- **Holds** — before the first mark and after the last, the curve is drawn dashed: the value just holds there.
+- **Undo / redo** — **Ctrl+Z**, and **Ctrl+Shift+Z** or **Ctrl+Y**, for marks, drags, anchors, recordings and take changes.
+
+### With a Sandbox level: lock to the action, one block per camera
+
+![vMoCo locked to the action, one block per camera](docs/screenshots/35-moco-lock.png)
+
+When a Sandbox practice level is running (see **16. Sandbox**), vMoCo gains:
+
+- **🔗 Lock to action** — the level's action becomes vMoCo's clock. There is **one transport**: Play / Stop in vMoCo or in the Sandbox panel moves the action, both sliders, the playhead and every camera together. **Stop** pauses on the current frame. **REC** punches in at the playhead (with the optional **Countdown**): **P** tracks play, **R** tracks record and overdub only the span you record, and the pass ends **on the last frame**, paused. Scrubbing either slider pauses both; dragging to the end holds the last frame.
+- **Takes per camera** — each camera has its own takes. The timeline shows **one block per camera**, stacked in camera order; the block of the camera you're operating is live, the others show their takes (click one to switch to that camera; the caret folds it).
+- **🎥 Cameras play along** — the cameras you're *not* operating repeat their current takes with the action, so you can record the crane's move, switch to the free camera and operate it while the crane repeats its move. (Tracks recorded in a velocity mode — continuous wheels, dolly / drone grip — are skipped, and the block's header says so.)
 
 ---
 
@@ -421,3 +438,73 @@ Motion blur hides a lot, but it can't invent detail that was never sampled. If a
 ---
 
 *Questions or bug reports: rob@realprogear.com*
+
+---
+
+## 16. Sandbox — practice levels
+
+**Sandbox** is a set of ready-made Unreal practice levels — a crane, a free camera, and background action (people walking, a car passing) that repeats exactly the same every time — that Bridge installs, launches and drives for you. **You don't need Unreal Engine installed** to use it. It's the quickest way to practise operating: frame a walker, follow a car, time a crane move to a moment.
+
+![The Sandbox panel](docs/screenshots/31-sandbox-panel.png)
+
+### Install
+
+![Install Sandbox](docs/screenshots/30-sandbox-install.png)
+
+Open the **Sandbox — practice levels** panel and click **Install Sandbox**. Bridge downloads the Sandbox player with its levels (one download, about 600 MB) and unpacks it — progress shows next to the button. When a newer player is released, an **⬇ Update** link appears next to the player's path.
+
+- **Use local build…** points Bridge at a Sandbox player you built yourself (level makers — see the Rexy Sandbox Kit below).
+- **+ Add level…** registers a level from its manifest (`.json`) — for levels already cooked into your player. **Remove** takes one off the list.
+
+### Launch, stop
+
+- **My levels** — pick a level.
+- **Display**, **Window** (Windowed / Full screen (borderless)), **Size** and **Render quality** — where and how the game opens. In windowed mode the game window can be dragged and resized; it reopens where you left it.
+- **▶ Launch**, **■ Stop** and **E-Stop** — each bindable. Stop closes the game (and its monitor windows). E-Stop stops all camera motion **and** closes the game; its bind box takes a **system-wide key combo** (it works while the game has focus) or a controller / OSC / MIDI button.
+
+Once the level is up, its cameras appear in the camera list like any Unreal camera: select one to operate it.
+
+### Views
+
+![Sandbox Views](docs/screenshots/32-sandbox-views.png)
+
+- **Main window: Blocking / Active camera** — *Blocking* is an editor-style free view of the whole set showing every camera rig: **right-mouse + WASD / Q E** to fly, **middle-mouse** to pan, **wheel** to dolly, **Alt + left-mouse** to orbit, **F** to frame the set, **1–9** to frame a rig. *Active camera* shows the camera you're operating.
+- **⌖ Frame all** — points the blocking view at the whole set. **Rigs** — show / hide the camera and crane models (never visible in a camera's own monitor). Each camera pill in the camera list also has **Hide** (hide that rig from the other cameras) and **✎** (rename it).
+- **Monitors** — a window per camera showing what it sees. Drag them to any screen and resize them; their layout is remembered.
+- **In-game controls** — a small play / scrub transport inside the blocking window (drag its title strip to move it, its corner to resize).
+- **Smoothing** — eases the crane's moves into continuous motion (higher = smoother, a touch more lag; 0 = off).
+- **Motion blur** — as a camera **shutter angle**; **180° (film)** is the classic look.
+- **Frame lock** — locks the game to 24 / 25 / 30 / 50 / 60 fps with VSync, so motion is evenly paced. With motion blur on, the blur is timed for that rate, like a real camera's shutter.
+- **fps** readout — how many frames the game is really drawing: **green** when it holds the frame lock, **amber** when it can't (motion will judder).
+- **Monitor res** — how many pixels each monitor renders before it's scaled up to fill its window. A near-full-screen 4K monitor is the game's biggest cost; **1280 px** looks near-identical for judging a frame and runs far faster.
+- **Fast lighting** — switches off Lumen and virtual shadows for the whole game: flatter light, much lighter on the GPU.
+
+> **Smooth motion:** if the fps readout is amber, lower **Monitor res** first, then try **Fast lighting**, then a lower **Render quality**. Once it's green, **Frame lock 24 or 25** plus **Motion blur 180°** gives the most film-like motion. On laptops whose screen is run by the integrated graphics chip, windowed mode can still judder a little — a monitor plugged into the laptop's HDMI port often helps.
+
+![The blocking view with camera monitors](docs/screenshots/34-sandbox-game.png)
+
+### The action
+
+![The action transport](docs/screenshots/33-sandbox-action.png)
+
+The level's background action has its own transport: **⏮** start, **▶ / ❚❚** play / pause, **⏭** end (pause on the last frame), a scrub slider, and a **loop** button. Each has a **Bind**.
+
+- **Loop on** (lit) — the action plays to the end and starts again.
+- **Loop off** — it plays **once** and pauses on its last frame, and vMoCo stops with it: time to line up your opening frame before the next pass.
+- **Sync with vMoCo** — keeps takes in step with the action.
+
+With **🔗 Lock to action** on in Virtual MoCo, this transport and vMoCo's are one and the same (see **10. Virtual MoCo**).
+
+### A typical practice session
+
+1. **Install Sandbox**, pick **Street — Walkers & Car**, **▶ Launch**.
+2. In **Views**, open a **monitor** for the Crane Cam, set **Monitor res 1280**, check the fps is green.
+3. Select the **Crane Cam**, tick **🔗 Lock to action** in Virtual MoCo, turn **loop off**.
+4. Arm **R** on the tracks you'll operate, press **REC** (with **Countdown** if you like) and follow the walker. The pass ends on the last frame.
+5. **⏮**, then **▶** to watch it back — the walkers do exactly what they did while you recorded.
+6. Switch to the **Free Cam**: the crane repeats its move (**🎥 Cameras play along**) while you operate the second camera.
+
+### Make your own levels
+
+Levels are ordinary Unreal levels built with the **RexySandbox** plugin and packaged into a Sandbox player. The **Rexy Sandbox Kit** — the plugin, template scripts, and a ready-made Claude Code prompt that builds a level from a description — is at **[github.com/RexyGaming/rexy-sandbox-kit](https://github.com/RexyGaming/rexy-sandbox-kit)**.
+

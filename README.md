@@ -4,6 +4,14 @@
 
 This repository is the **download page and documentation** for Rexy Bridge. (The v3 application is closed source.)
 
+### New in 3.7 — Sandbox practice levels
+
+**No Unreal Engine needed.** Click **Install Sandbox** in the app and Bridge downloads ready-made practice levels — a crane, a free camera, people walking and a car passing, repeating exactly the same every time — then launches and drives them for you. Record a move locked to the action, play it back, operate a second camera while the first repeats its move.
+
+![Sandbox](docs/screenshots/34-sandbox-game.png)
+
+Want to build your own levels? The **[Rexy Sandbox Kit](https://github.com/RexyGaming/rexy-sandbox-kit)** has the Unreal plugin, template scripts and a Claude Code prompt that builds a level from a description.
+
 ---
 
 ## ⬇️ Download
@@ -34,11 +42,11 @@ Rexy Bridge runs on **Windows** and **macOS**:
 
 ## Requirements
 
-- **Windows** (64-bit) **or macOS** (Apple Silicon or Intel)
-- **Unreal Engine 5.3+** with the **Remote Control API** plugin enabled
-- A Cine Camera Actor in your level (a crane rig is optional)
+- **Windows** (64-bit) or **macOS** (Apple Silicon or Intel)
+- **For Sandbox:** nothing else — the practice levels are a separate download inside the app (~600 MB). A graphics card that runs current games well; the fps readout tells you if it's keeping up.
+- **For your own Unreal projects:** **Unreal Engine 5.3+** with the **Remote Control API** plugin enabled, and a Cine Camera Actor in your level (a crane rig is optional)
 
-Everything else — the bridge, the control panel, and the gamepad reader — is bundled inside the installer. No Node, Python, or dependencies to install.
+Everything else — the bridge, the control panel, the gamepad reader and the Sandbox installer — is bundled inside the app. No Node, Python, or dependencies to install.
 
 ---
 

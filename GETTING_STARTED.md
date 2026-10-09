@@ -1,19 +1,23 @@
-# Rexy Bridge 3.0 (beta) — Getting Started
+# Rexy Bridge 3.7 (beta) — Getting Started
 
 Rexy Bridge drives Unreal Engine 5 cine cameras and crane rigs live from physical wheels, game controllers, MIDI, OSC, or the keyboard. This guide gets you from a downloaded installer to moving a camera in UE.
 
 There are two halves to setup: **install Rexy Bridge** (5 minutes) and **prepare your UE project** (10 minutes the first time, seconds after that). Do them in either order — connect them at the end.
 
+> **No Unreal Engine? Start with Sandbox.** Install Rexy Bridge (Part 1), then open the **Sandbox — practice levels** panel and click **Install Sandbox**: Bridge downloads ready-made practice levels (a crane, a free camera, people and a car to film) and runs them for you — no Unreal install, no project setup. Skip Part 2 entirely. See **User Guide → 16. Sandbox**.
+
+**On a Mac?** Download the `.dmg` for your Mac (**arm64** for Apple Silicon, **x64** for Intel) instead of the `.exe`, open it and drag Rexy Bridge to Applications. The first launch may need **right-click → Open** (the beta isn't notarised yet). Everything else in this guide is the same.
+
 ---
 
 ## Part 1 — Install Rexy Bridge
 
-1. Download **`RexyBridge-Setup-3.6.0-beta.exe`**.
+1. Download **`RexyBridge-Setup-3.7.0-beta.exe`**.
 2. Double-click it. Windows will show a blue **"Windows protected your PC"** dialog — this is because the beta isn't code-signed yet, **not** a warning about the app itself. Click **More info → Run anyway**.
 3. Follow the installer. You can choose the install location.
 4. Launch **Rexy Bridge** from the Start menu.
 
-When it opens you'll see the control panel with a **`v3.6.0-beta`** badge in the top-left next to the logo (it increments every dev build, so the exact number tells you which build you're on). If you ever don't see that badge after an update, you're looking at a cached window — press **Ctrl+Shift+R** to reload.
+When it opens you'll see the control panel with a **`v3.7.0-beta`** badge in the top-left next to the logo (it increments every dev build, so the exact number tells you which build you're on). If you ever don't see that badge after an update, you're looking at a cached window — press **Ctrl+Shift+R** to reload.
 
 Rexy Bridge is self-contained: the app window, the bridge that talks to UE, and the gamepad reader are all inside it. Nothing else to install.
 
