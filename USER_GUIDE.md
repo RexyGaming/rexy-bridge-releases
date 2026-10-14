@@ -339,15 +339,19 @@ The **ⓘ** icon on each filter explains what it does and what every parameter c
 
 ---
 
-## 12. Other inputs — OSC, MIDI, FreeD
+## 12. Other inputs — NODO, OSC, MIDI, FreeD
 
 ![Alt inputs — OSC / FreeD / MIDI](docs/screenshots/20a-alt-inputs.png)
 
 - **OSC in** — accept OSC from external devices (e.g. the Rexy Wheels). Set **port**, an optional **prefix** filter, and the input **min/max** range. **Sample 10s** records every OSC message for ten seconds and exports a JSON log — the ground-truth capture for diagnosing a device.
 - **MIDI** — **Enable MIDI** reads MIDI controls (knobs, faders, notes, pitch-bend) into the same input path as gamepads, so they bind the same way.
 - **FreeD in** — accept an incoming FreeD tracking stream.
+- **NODO in** — **NODO Inertia Wheels**, read straight from their USB **Receiver** (no NODO app needed). On the wheels set **Menu → Output → Remote Head → IW-API** and **Signal Path → Wireless**; plug the Receiver into this computer (Windows may need the Silicon Labs CP210x driver from nodo.film/driver), close **NODO Desktop Link** if it's running, then tick **listen**. Channels: **pan, tilt, roll, focus, iris, zoom**.
+  - Pan / tilt / roll start at **centre** wherever the wheels are when listening starts; **Zero** re-centres them. **range** is how many degrees of wheel turn span a control's whole travel (360° = half a turn either way from centre); fine-tune per axis with the **C** button. Use **Absolute** wheel mode for NODO wheels.
+  - Bridge reconnects to the Receiver by itself next time, and when it's plugged back in.
+  - *New in 3.7.1 and not yet tested on hardware by us — reports welcome.*
 
-All three feed the same binding system: enable the source, then **Bind** any control to it.
+All of them feed the same binding system: enable the source, then **Bind** any control to it.
 
 **Calibrate and filter any input.** Each live input row has a **C** button that opens the same calibration wizard and **Signal Filter Lab** as the gamepad axes (section 11) — so an OSC, MIDI or FreeD stream gets the full treatment: capture its range and rest, shape a response curve, and stack a live filter chain to clean up a noisy feed. The button reads **C·ƒ** when a filter chain is running and turns cyan once the input is calibrated.
 

@@ -12,12 +12,12 @@ There are two halves to setup: **install Rexy Bridge** (5 minutes) and **prepare
 
 ## Part 1 — Install Rexy Bridge
 
-1. Download **`RexyBridge-Setup-3.7.0-beta.exe`**.
+1. Download **`RexyBridge-Setup-3.7.1-beta.exe`**.
 2. Double-click it. Windows will show a blue **"Windows protected your PC"** dialog — this is because the beta isn't code-signed yet, **not** a warning about the app itself. Click **More info → Run anyway**.
 3. Follow the installer. You can choose the install location.
 4. Launch **Rexy Bridge** from the Start menu.
 
-When it opens you'll see the control panel with a **`v3.7.0-beta`** badge in the top-left next to the logo (it increments every dev build, so the exact number tells you which build you're on). If you ever don't see that badge after an update, you're looking at a cached window — press **Ctrl+Shift+R** to reload.
+When it opens you'll see the control panel with a **`v3.7.1-beta`** badge in the top-left next to the logo (it increments every dev build, so the exact number tells you which build you're on). If you ever don't see that badge after an update, you're looking at a cached window — press **Ctrl+Shift+R** to reload.
 
 Rexy Bridge is self-contained: the app window, the bridge that talks to UE, and the gamepad reader are all inside it. Nothing else to install.
 

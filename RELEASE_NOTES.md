@@ -1,6 +1,18 @@
-# Rexy Bridge 3.7.0-beta — Sandbox
+# Rexy Bridge 3.7.1-beta — NODO Inertia Wheels
 
-The big one: **Sandbox practice levels.** Click **Install Sandbox** and Bridge downloads ready-made Unreal practice levels — a crane, a free camera, people walking and a car passing, repeating exactly the same every time — and launches and drives them for you. **No Unreal Engine install needed.**
+**NODO Inertia Wheels** now plug straight into Rexy Bridge — no NODO app needed. Everything from the **3.7.0 Sandbox** release is below.
+
+## New in 3.7.1
+
+- **NODO in** (Alt Inputs panel): reads NODO Inertia Wheels directly from their **USB Receiver**. Channels **pan, tilt, roll, focus, iris, zoom**, each bindable like any wheel or OSC input.
+  - On the wheels: **Menu → Output → Remote Head → IW-API**, and **Signal Path → Wireless**. Plug the Receiver in, close **NODO Desktop Link** if it's open, and tick **listen**.
+  - Pan / tilt / roll start at centre wherever the wheels are; **Zero** re-centres them; **range** sets how much wheel turn covers a control's travel (fine-tune per axis with **C**). Use **Absolute** wheel mode.
+  - Windows may need the **Silicon Labs CP210x driver** (nodo.film/driver).
+  - **Please test and report** — this is built from NODO's published data format and tested with simulated data; we haven't had wheels on it yet. If the status line says "listening" but shows no packets, tell us your wheels' firmware version.
+
+---
+
+## From 3.7.0 — Sandbox
 
 **[Install & setup guide](GETTING_STARTED.md) · [User guide — 16. Sandbox](USER_GUIDE.md#16-sandbox--practice-levels) · [Build your own levels](https://github.com/RexyGaming/rexy-sandbox-kit)**
 
